@@ -1,0 +1,304 @@
+import "./styles.css";
+import axios from "axios";
+import React from "react";
+import { useEffect, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TableRowDetails,
+  TableRowColumn,
+  Button
+} from "@material-ui/core";
+
+export default function App() {
+  const [users, setUsers] = useState([]);
+  const [expandedRows, setExpandedRows] = useState([]);
+
+  const RandomUsers = async () => {
+    return await axios
+      .get("https://random-data-api.com/api/v2/users?size=10")
+      .then((response) => setUsers(response.data));
+  };
+
+  const handleRowClick = (rowId) => {
+    if (expandedRows.includes(rowId)) {
+      setExpandedRows(expandedRows.filter((id) => id !== rowId));
+    } else {
+      setExpandedRows([...expandedRows, rowId]);
+    }
+  };
+
+  useEffect(() => {
+    RandomUsers();
+  }, []);
+  return (
+    <div className="App">
+      <h1>Hello CodeSandbox</h1>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "lightblue",
+                outlineStyle: "auto"
+              }}
+            >
+              Name
+            </TableCell>
+            <TableCell
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "lightblue",
+                outlineStyle: "auto"
+              }}
+            >
+              Username
+            </TableCell>
+            <TableCell
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "lightblue",
+                outlineStyle: "auto"
+              }}
+            >
+              Gender
+            </TableCell>
+            <TableCell
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "lightblue",
+                outlineStyle: "auto"
+              }}
+            >
+              Avatar
+            </TableCell>
+            <TableCell
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "lightblue",
+                outlineStyle: "auto"
+              }}
+            >
+              Additional Details
+            </TableCell>
+            {expandedRows.length > 0 && (
+              <>
+                <TableCell
+                  style={{
+                    fontWeight: "bold",
+                    backgroundColor: "lightblue",
+                    outlineStyle: "auto"
+                  }}
+                >
+                  Email
+                </TableCell>
+                <TableCell
+                  style={{
+                    fontWeight: "bold",
+                    backgroundColor: "lightblue",
+                    outlineStyle: "auto"
+                  }}
+                >
+                  Phone
+                </TableCell>
+              </>
+            )}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {users.map((user) => (
+            <React.Fragment key={user.id}>
+              <TableRow
+                expandable={true.toString()}
+                onClick={() => handleRowClick(user.id)}
+              >
+                <TableCell>{user.first_name + " " + user.last_name}</TableCell>
+                <TableCell>{user.username}</TableCell>
+                <TableCell>{user.gender}</TableCell>
+                <TableCell>
+                  <img src={user.avatar} alt="avatar" height="30" width="30" />
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    onClick={() => handleRowClick(user.id)}
+                  >
+                    Show Details
+                  </Button>
+                </TableCell>
+                {expandedRows.includes(user.id) && (
+                  <>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.phone_number}</TableCell>
+                  </>
+                )}
+              </TableRow>
+            </React.Fragment>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+
+
+
+
+{
+  /* <div className="App">
+      <h1>Hello CodeSandbox</h1>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "lightblue",
+                outlineStyle: "auto"
+              }}
+            >
+              Name
+            </TableCell>
+            <TableCell
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "lightblue",
+                outlineStyle: "auto"
+              }}
+            >
+              Username
+            </TableCell>
+            <TableCell
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "lightblue",
+                outlineStyle: "auto"
+              }}
+            >
+              Gender
+            </TableCell>
+            <TableCell
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "lightblue",
+                outlineStyle: "auto"
+              }}
+            >
+              Avatar
+            </TableCell>
+            <TableCell
+              style={{
+                fontWeight: "bold",
+                backgroundColor: "lightblue",
+                outlineStyle: "auto"
+              }}
+            >
+              Additional Detail
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {users.map((user) => (
+            <React.Fragment key={user.id}>
+              <TableRow
+                expandable={true.toString()}
+                onClick={() => handleRowClick(user.id)}
+              >
+                <TableCell>{user.first_name + " " + user.last_name}</TableCell>
+                <TableCell>{user.username}</TableCell>
+                <TableCell>{user.gender}</TableCell>
+                <TableCell>
+                  <img src={user.avatar} alt="avatar" height="30" width="30" />
+                </TableCell>
+                <TableCell>
+                  <Button variant="contained" onClick={() => openModal(user)}>
+                    Show Details
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </React.Fragment>
+          ))}
+        </TableBody>
+      </Table>
+      <Modal open={modalOpen} onClose={closeModal}>
+        <div
+          style={{
+            padding: 20,
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            width: "30em",
+            height: "18em",
+            marginTop: "-9em",
+            marginLeft: "-15em",
+            border: "1px solid #ccc",
+            backgroundColor: "#0e86d4"
+          }}
+        >
+          <Table>
+            <TableBody>
+              {selectedUser ? (
+                <React.Fragment>
+                  <TableRow>
+                    <TableCell style={{ background: "#75e6da" }}>
+                      Name
+                    </TableCell>
+                    <TableCell style={{ background: "#75e6da" }}>
+                      {selectedUser.first_name} {selectedUser.last_name}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{ background: "#75e6da" }}>
+                      Username
+                    </TableCell>
+                    <TableCell style={{ background: "#75e6da" }}>
+                      {selectedUser.username}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{ background: "#75e6da" }}>
+                      Address
+                    </TableCell>
+                    <TableCell style={{ background: "#75e6da" }}>
+                      {selectedUser.address["street_address"]},{" "}
+                      {selectedUser.address["street_name"]},
+                      {selectedUser.address["city"]}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{ background: "#75e6da" }}>
+                      Employment Title and Skill
+                    </TableCell>
+                    <TableCell style={{ background: "#75e6da" }}>
+                      {selectedUser.employment["title"]}
+                      <br />
+                      {selectedUser.employment["key_skill"]}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell style={{ background: "#75e6da" }}>
+                      Credit Card Number
+                    </TableCell>
+                    <TableCell style={{ background: "#75e6da" }}>
+                      {selectedUser.credit_card["cc_number"]}
+                    </TableCell>
+                  </TableRow>
+                </React.Fragment>
+              ) : (
+                <p>No user selected</p>
+              )}
+            </TableBody>
+          </Table>
+          <Button variant="contained" onClick={closeModal}>
+            Close
+          </Button>
+        </div>
+      </Modal>
+    </div>
+  ); */
+}
