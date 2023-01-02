@@ -1,6 +1,9 @@
 # User Table and Modal
 
 This is a simple React application that displays a table of users and allows the user to view additional details about each user in a modal.
+
+Website: https://ad997.netlify.app/
+
 ### Features
 
     Displays a table of users with their name, username, gender, and avatar
